@@ -1,1 +1,17 @@
 https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cognitiveservices/data-plane/AzureOpenAI/inference/preview/2024-02-15-preview/inference.json
+
+requests
+| where timestamp > ago(1h) // Adjust the time range as needed
+| where resultCode == "404" // Filter for 'Not Found' errors
+| where url has "chat/completions" or name has "chat/completions" // Narrow down to LLM calls
+| project 
+    TimeGenerated = timestamp,
+    OperationName = name,
+    RequestURL = url, 
+    ResponseCode = resultCode, 
+    DurationMs = duration,
+    ClientIP = client_IP,
+    // Extract headers if they were successfully captured in custom dimensions
+    UserAgent = customDimensions["User-Agent"],
+    Host = customDimensions["Host"]
+| order by TimeGenerated desc
