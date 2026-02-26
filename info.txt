@@ -64,3 +64,25 @@ requests
         </when>
     </choose>
 </inbound>
+
+
+<inbound>
+    <base />
+
+    <set-variable name="requestedModel" value="@{
+        var body = context.Request.Body.As<JObject>(preserveContent: true);
+        return (string)body["model"];
+    }" />
+
+    <choose>
+        <when condition="@(context.Request.Url.Path.Contains("/v1/chat/completions"))">
+            <rewrite-uri template="@("/openai/deployments/" + context.Variables["requestedModel"] + "/chat/completions?api-version=2023-05-15")" />
+        </when>
+    </choose>
+
+    <set-header name="api-key" exists-action="override">
+        <value>{{azure-openai-backend-key}}</value>
+    </set-header>
+
+    <set-header name="Authorization" exists-action="delete" />
+</inbound>
