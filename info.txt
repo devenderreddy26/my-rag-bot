@@ -1,5 +1,5 @@
 https://raw.githubusercontent.com/Azure/azure-rest-api-specs/main/specification/cognitiveservices/data-plane/AzureOpenAI/inference/preview/2024-02-15-preview/inference.json
-
+HTTP 429 (: RateLimitReached)\n\nYour requests to text-embedding-ada-002 for text-embedding-ada-002 in East US 2 have exceeded the call rate limit for your current OpenAI S0 pricing tie
 requests
 | where timestamp > ago(1h) // Adjust the time range as needed
 | where resultCode == "404" // Filter for 'Not Found' errors
